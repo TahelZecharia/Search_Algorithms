@@ -27,11 +27,24 @@ public class Position {
 
 
     @Override
+    public int hashCode() {
+
+        String str = "" + x + "" + y + "";
+        return Integer.parseInt(str);
+    }
+
+    @Override
     public boolean equals(Object o) {
 
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Position p = (Position) o;
-        return (x == p.x && y == p.y);
+        return x == p.getX() && y == p.getY();
+    }
+
+    @Override
+    public String toString() {
+
+        return "(" + x + "," + y + ")";
     }
 }

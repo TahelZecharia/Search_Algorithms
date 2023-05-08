@@ -17,6 +17,11 @@ public class Map {
 
         if (! clockwise) {
             Collections.reverse(Arrays.asList(operators));
+            System.out.println(Arrays.toString(operators));
+        }
+        for (String[] strings : board) {
+
+            System.out.println(Arrays.toString(strings));
         }
     }
 
@@ -32,7 +37,7 @@ public class Map {
 
     public boolean isGoal(Node node) {
 
-        return goalPos.equals(node.getPos());
+        return node.getTerrain().equals("G");
     }
 
     public String getTerrain(Position pos) {
@@ -57,7 +62,9 @@ public class Map {
 
     public boolean allowedOperator(Node node, Position newPos) {
 
-        if (node.getParent().equals(newPos)) return false;
+        if (node.getParent() != null) {
+            if (node.getParent().getPos().equals(newPos)) return false;
+        }
 
         String terrain = getTerrain(newPos);
         if (terrain == null || terrain.equals("X")) return false;
@@ -78,8 +85,8 @@ public class Map {
 
                 case RIGHT:
 
-                    tempPos.setX(nodePose.getX() + 1);
-                    tempPos.setY(nodePose.getY());
+                    tempPos.setX(nodePose.getX());
+                    tempPos.setY(nodePose.getY() + 1);
                     if (allowedOperator(node, tempPos)) {
                         allowedOp.add(d);
                     }
@@ -88,7 +95,7 @@ public class Map {
                 case RIGHT_DOWN:
 
                     tempPos.setX(nodePose.getX() + 1);
-                    tempPos.setY(nodePose.getY() - 1);
+                    tempPos.setY(nodePose.getY() + 1);
                     if (allowedOperator(node, tempPos)) {
                         allowedOp.add(d);
                     }
@@ -96,8 +103,8 @@ public class Map {
 
                 case DOWN:
 
-                    tempPos.setX(nodePose.getX());
-                    tempPos.setY(nodePose.getY() - 1);
+                    tempPos.setX(nodePose.getX() + 1);
+                    tempPos.setY(nodePose.getY());
                     if (allowedOperator(node, tempPos)) {
                         allowedOp.add(d);
                     }
@@ -105,7 +112,7 @@ public class Map {
 
                 case LEFT_DOWN:
 
-                    tempPos.setX(nodePose.getX() - 1);
+                    tempPos.setX(nodePose.getX() + 1);
                     tempPos.setY(nodePose.getY() - 1);
                     if (allowedOperator(node, tempPos)) {
                         allowedOp.add(d);
@@ -114,8 +121,8 @@ public class Map {
 
                 case LEFT:
 
-                    tempPos.setX(nodePose.getX() - 1);
-                    tempPos.setY(nodePose.getY());
+                    tempPos.setX(nodePose.getX());
+                    tempPos.setY(nodePose.getY() - 1);
                     if (allowedOperator(node, tempPos)) {
                         allowedOp.add(d);
                     }
@@ -124,7 +131,7 @@ public class Map {
                 case LEFT_UP:
 
                     tempPos.setX(nodePose.getX() - 1);
-                    tempPos.setY(nodePose.getY() + 1);
+                    tempPos.setY(nodePose.getY() - 1);
                     if (allowedOperator(node, tempPos)) {
                         allowedOp.add(d);
                     }
@@ -132,8 +139,8 @@ public class Map {
 
                 case UP:
 
-                    tempPos.setX(nodePose.getX());
-                    tempPos.setY(nodePose.getY() + 1);
+                    tempPos.setX(nodePose.getX() - 1);
+                    tempPos.setY(nodePose.getY());
                     if (allowedOperator(node, tempPos)) {
                         allowedOp.add(d);
                     }
@@ -141,7 +148,7 @@ public class Map {
 
                 case RIGHT_UP:
 
-                    tempPos.setX(nodePose.getX() + 1);
+                    tempPos.setX(nodePose.getX() - 1);
                     tempPos.setY(nodePose.getY() + 1);
                     if (allowedOperator(node, tempPos)) {
                         allowedOp.add(d);
@@ -153,47 +160,47 @@ public class Map {
         return allowedOp;
     }
 
-    public Node operator(Node node, Direction d) {
+    public Node operator(Node node, Direction direction) {
 
         Position nodePose = node.getPos();
 
-        switch (d) {
+        switch (direction) {
 
             case RIGHT:
 
-                return createNode(nodePose.getX() + 1, nodePose.getY(), node, Direction.RIGHT);
+                return createNode(nodePose.getX(), nodePose.getY() + 1, node, Direction.RIGHT);
 
             case RIGHT_DOWN:
 
-                return createNode(nodePose.getX() + 1, nodePose.getY() - 1, node, Direction.RIGHT_DOWN);
+                return createNode(nodePose.getX() + 1, nodePose.getY() + 1, node, Direction.RIGHT_DOWN);
 
             case DOWN:
 
-                return createNode(nodePose.getX(), nodePose.getY() - 1, node, Direction.DOWN);
+                return createNode(nodePose.getX() + 1, nodePose.getY(), node, Direction.DOWN);
 
             case LEFT_DOWN:
 
-                return createNode(nodePose.getX() - 1, nodePose.getY() - 1, node, Direction.LEFT_DOWN);
+                return createNode(nodePose.getX() + 1, nodePose.getY() - 1, node, Direction.LEFT_DOWN);
 
             case LEFT:
 
-                return createNode(nodePose.getX() - 1, nodePose.getY(), node, Direction.LEFT);
+                return createNode(nodePose.getX(), nodePose.getY() - 1, node, Direction.LEFT);
 
             case LEFT_UP:
 
-                return createNode(nodePose.getX() - 1, nodePose.getY() + 1, node, Direction.LEFT_UP);
+                return createNode(nodePose.getX() - 1, nodePose.getY() - 1, node, Direction.LEFT_UP);
 
             case UP:
 
-                return createNode(nodePose.getX(), nodePose.getY() + 1, node, Direction.UP);
+                return createNode(nodePose.getX() - 1, nodePose.getY(), node, Direction.UP);
 
             case RIGHT_UP:
 
-                return createNode(nodePose.getX() + 1, nodePose.getY() + 1, node, Direction.RIGHT_UP);
+                return createNode(nodePose.getX() - 1, nodePose.getY() + 1, node, Direction.RIGHT_UP);
 
             default:
 
-                throw new IllegalStateException("Unexpected value: " + d);
+                throw new IllegalStateException("Unexpected value: " + direction);
 
         }
     }

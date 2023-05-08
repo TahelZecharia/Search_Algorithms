@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.SortedMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,12 +44,18 @@ public class Ex1 {
                 int size = Integer.parseInt(scanner.nextLine());
 
                 // 6) Reads the coordinates of the start point and the end point:
-                Pattern pattern = Pattern.compile("\\((-?\\d+),(-?\\d+)\\),\\((-?\\d+),(-?\\d+)\\)");
-                Matcher matcher = pattern.matcher(scanner.nextLine());
-                int x1 = Integer.parseInt(matcher.group(1));
-                int y1 = Integer.parseInt(matcher.group(2));
-                int x2 = Integer.parseInt(matcher.group(3));
-                int y2 = Integer.parseInt(matcher.group(4));
+                line = scanner.nextLine();
+                int startX = Integer.parseInt(line.substring(1, line.indexOf(",")));
+                int startY = Integer.parseInt(line.substring(line.indexOf(",")+1, line.indexOf(")")));
+                int goalX = Integer.parseInt(line.substring(line.lastIndexOf("(")+1, line.lastIndexOf(",")));
+                int goalY = Integer.parseInt(line.substring(line.lastIndexOf(",")+1, line.lastIndexOf(")")));
+//                Pattern pattern = Pattern.compile("\\((-?\\d+),(-?\\d+)\\),\\((-?\\d+),(-?\\d+)\\)");
+//                Matcher matcher = pattern.matcher(line);
+//                System.out.println(line);
+//                int startX = Integer.parseInt(matcher.group(1));
+//                int startY = Integer.parseInt(matcher.group(2));
+//                int goalX = Integer.parseInt(matcher.group(3));
+//                int goalY = Integer.parseInt(matcher.group(4));
 
                 // 7) Reads the board:
                 String[][] board = new String[size][size];
@@ -59,15 +66,24 @@ public class Ex1 {
                     }
                 }
 
+                // ********** ALGORITHM **********
+
+                Map map = new Map(board, size, clockwise, goalX, goalY);
+                Algo algo = new Algo(map, algoName, oldFirst, withOpenList, startX, startY);
+
+                System.out.println(algo.DFID());
+                System.out.println(Node.getNodeCounter());
+                System.out.println(algo.getCost());
 
 
 
 
-                while (scanner.hasNextLine()) {
 
-                    String data = scanner.nextLine();
-                    int algo = Integer.parseInt(data.substring(data.length()-1));
-                    String query = data.substring(0, data.length()-2);
+//                while (scanner.hasNextLine()) {
+//
+//                    String data = scanner.nextLine();
+//                    int algo = Integer.parseInt(data.substring(data.length()-1));
+//                    String query = data.substring(0, data.length()-2);
 
 //                    Algo myAlgo = new Algo(myNet, query);
 //                    double ans = myAlgo.CalculateQuery(algo);
@@ -76,10 +92,10 @@ public class Ex1 {
 
 //                    outputFile.write(String.format("%.5f", ans) + "," + add + "," + mul);
 
-                    if (scanner.hasNextLine()) {
-                        outputFile.write("\n");
-                    }
-                }
+//                    if (scanner.hasNextLine()) {
+//                        outputFile.write("\n");
+//                    }
+//                }
                 scanner.close();
             }
             catch (Exception e){
