@@ -71,9 +71,13 @@ public class Ex1 {
                 Map map = new Map(board, size, clockwise, goalX, goalY);
                 Algo algo = new Algo(map, algoName, oldFirst, withOpenList, startX, startY);
 
+                long startTime = System.currentTimeMillis();
                 System.out.println(algo.DFID());
                 System.out.println(Node.getNodeCounter());
                 System.out.println(algo.getCost());
+//                String result = String.format("%.2f", System.currentTimeMillis() - startTime);
+                System.out.println(((System.currentTimeMillis() - startTime) / 1000) + " seconds");
+//                System.out.println(result + " seconds");
 
 
 

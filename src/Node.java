@@ -4,18 +4,21 @@ public class Node {
     private String terrain;
     private Node parent;
     private Direction parentOperator;
-    private int cost;
+    private int cost; // The cost of the route from the start node to this node.
+    private int weight; // The weight of the node according to the heuristic function.
     private int key;
     private static int nodeCounter = 0;
+    private boolean out = false;
 //    private int depth;
 //    private int weight;
 
-    public Node(int x, int y, String terrain, Node parent, Direction parentOperator){
+    public Node(int x, int y, String terrain, Node parent, Direction parentOperator, int weight){
 
         this.pos = new Position(x, y);
         this.terrain = terrain;
         this.parent = parent;
         this.parentOperator = parentOperator;
+        this.weight = weight;
         this.key = nodeCounter++;
 
         switch (terrain) {
@@ -69,12 +72,39 @@ public class Node {
         return cost;
     }
 
+    public int getWeight() {
+        return weight;
+    }
+
     public static int getNodeCounter() {
         return nodeCounter;
     }
 
     public Direction getParentOperator() {
         return parentOperator;
+    }
+
+    public int getFunc() {
+
+//        return cost;
+        return cost + weight;
+    }
+
+    public boolean isOut() {
+        return out;
+    }
+
+    public void setOut(boolean out) {
+        this.out = out;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Node n = (Node) o;
+        return pos.equals(n.getPos());
     }
 
     @Override

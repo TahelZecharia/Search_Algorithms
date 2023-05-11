@@ -6,7 +6,8 @@ public class Map {
     private int size;
     private boolean clockwise;
     private Position goalPos;
-    private Direction[] operators = {Direction.RIGHT, Direction.RIGHT_DOWN, Direction.DOWN, Direction.LEFT_DOWN, Direction.LEFT, Direction.LEFT_UP, Direction.UP, Direction.RIGHT_UP};
+    private Direction[] operators;
+    //= {Direction.RIGHT, Direction.RIGHT_DOWN, Direction.DOWN, Direction.LEFT_DOWN, Direction.LEFT, Direction.LEFT_UP, Direction.UP, Direction.RIGHT_UP};
 
     public Map(String[][] board, int size, boolean clockwise, int goalX, int goalY) {
 
@@ -15,14 +16,55 @@ public class Map {
         this.clockwise = clockwise;
         this.goalPos = new Position(goalX, goalY);
 
-        if (! clockwise) {
-            Collections.reverse(Arrays.asList(operators));
-            System.out.println(Arrays.toString(operators));
+        if (clockwise) {
+
+            operators = new Direction[]{Direction.RIGHT, Direction.RIGHT_DOWN, Direction.DOWN, Direction.LEFT_DOWN, Direction.LEFT, Direction.LEFT_UP, Direction.UP, Direction.RIGHT_UP};
+
+        }
+        else {
+
+            operators = new Direction[]{Direction.RIGHT, Direction.RIGHT_UP, Direction.UP, Direction.LEFT_UP, Direction.LEFT, Direction.LEFT_DOWN, Direction.DOWN, Direction.RIGHT_DOWN};
         }
         for (String[] strings : board) {
 
             System.out.println(Arrays.toString(strings));
         }
+    }
+
+    /**
+     * The function receives a location of a node and calculates its weight
+     * according to the heuristic function.
+     */
+    public int HeuristicFunction(int x, int y) {
+
+        // Calculates the Manhattan distance between the goal point and the current point:
+        int ManhattanDistance = Math.abs(goalPos.getX() - x) + Math.abs(goalPos.getY() - y);
+
+        int weight = 5; // The cost to move to the goal node is 5.
+        int amountD = (int) (size * size / 10); // It is known that the entire map has at most 10% of "D" squares.
+
+        // It is known that the entire map has at most 10% of "D" squares (whose cost is 1).
+        if (ManhattanDistance <= amountD + 1) {
+
+            weight += ManhattanDistance - 1;
+        }
+
+        // It is known that the entire map has at most 10% of "R" squares (whose cost is 3).
+        else if (ManhattanDistance <= amountD * 2 + 1) {
+
+            weight += amountD;
+            weight += (ManhattanDistance - amountD - 1) * 3;
+        }
+
+        // The other squares on the board are "H" (whose cost is 5).
+        else {
+
+            weight += amountD;
+            weight += amountD * 3;
+            weight += (ManhattanDistance - amountD * 2 - 1) * 5;
+        }
+
+        return weight;
     }
 
     public Node createNode(int x, int y, Node parent, Direction parentOperator) {
@@ -32,7 +74,7 @@ public class Map {
             return null;
         }
 
-        return new Node(x, y, board[x-1][y-1], parent, parentOperator);
+        return new Node(x, y, board[x-1][y-1], parent, parentOperator, HeuristicFunction(x, y));
     }
 
     public boolean isGoal(Node node) {

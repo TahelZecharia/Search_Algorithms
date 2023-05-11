@@ -1,6 +1,4 @@
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class Algo {
 
@@ -10,10 +8,6 @@ public class Algo {
     private boolean withOpenList;
     private Node startNode;
     private Node goalNode = null;
-    private Hashtable<Position, Node> openList = new Hashtable<>();
-    private Hashtable<Position, Node> closedList = new Hashtable<>();
-    private Queue<Node> Q = new LinkedList<>();
-
 
     public Algo(Map map, String algoName, Boolean oldFirst, Boolean withOpenList, int startX, int startY) {
 
@@ -39,6 +33,7 @@ public class Algo {
                 break;
 
             case "A*":
+                AStar();
                 break;
 
             case "IDA*":
@@ -84,6 +79,10 @@ public class Algo {
     }
 
     public String BFS() {
+
+        Hashtable<Position, Node> openList = new Hashtable<>();
+        Hashtable<Position, Node> closedList = new Hashtable<>();
+        Queue<Node> Q = new LinkedList<>();
 
         Q.add(startNode);
         openList.put(startNode.getPos(), startNode);
@@ -188,6 +187,145 @@ public class Algo {
         return "fail";
     }
 
+    public String AStar() {
+
+        Hashtable<Position, Node> openList = new Hashtable<>();
+        Hashtable<Position, Node> closedList = new Hashtable<>();
+        PriorityQueue<Node> PQ = new PriorityQueue<>(new AStarComparator());
+
+        PQ.add(startNode);
+        openList.put(startNode.getPos(), startNode);
+
+        while (!PQ.isEmpty()) {
+
+            Node currNode = PQ.poll();
+            openList.remove(currNode.getPos());
+
+//            print(currNode);
+
+            if (map.isGoal(currNode)) {
+
+                goalNode = currNode;
+                return path(currNode);
+            }
+
+
+            closedList.put(currNode.getPos(), currNode);
+
+            // Expanding currNode:
+            for (Direction direction : map.allowedOperators(currNode)) {
+
+                Node newNode = map.operator(currNode, direction);
+
+                if (!(openList.containsKey(newNode.getPos()) || closedList.containsKey(newNode.getPos()))) {
+
+                    PQ.add(newNode);
+                    openList.put(newNode.getPos(), newNode);
+                }
+
+                else if (openList.contains(newNode.getPos())) {
+
+                    if (openList.get(newNode.getPos()).getFunc() > newNode.getFunc()) {
+
+                        PQ.remove(openList.put(newNode.getPos(), newNode));
+                        PQ.add(newNode);
+                    }
+                }
+            }
+        }
+        return "no path";
+    }
+
+    public String IDAStar() {
+
+        Stack<Node> S = new Stack<>();
+        Hashtable<Position, Node> openList = new Hashtable<>();
+        int threshold = startNode.getWeight();
+
+        while (threshold != Integer.MAX_VALUE) {
+
+            // Minimum f(x) value we have seen through an iteration
+            int minF = Integer.MAX_VALUE;
+
+            startNode.setOut(false);
+            S.add(startNode);
+            openList.put(startNode.getPos(), startNode);
+
+            while ( !S.isEmpty() ) {
+
+                Node currNode = S.pop();
+
+//                if (withOpen()) {
+//                    System.out.println(currNode);
+//                }
+
+                if (currNode.isOut()) {
+
+                    openList.remove(currNode.getPos());
+                }
+
+                else {
+
+                    // Mark the node to be removed next time it's added to the stack
+                    currNode.setOut(true);
+                    // Push back to the stack
+                    S.add(currNode);
+
+
+
+                    // Expanding currNode:
+                    for (Direction direction : map.allowedOperators(currNode)) {
+
+                        Node newNode = map.operator(currNode, direction);
+
+                        if (newNode.getFunc() > threshold) {
+
+                            minF = Math.min(minF, newNode.getFunc());
+                            continue;
+                        }
+
+                        if (openList.contains(newNode.getPos()) && openList.get(newNode.getPos()).isOut()) {
+
+                            continue;
+                        }
+
+                        if (openList.contains(newNode.getPos()) && !openList.get(newNode.getPos()).isOut()) {
+
+                            if (openList.get(newNode.getPos()).getFunc() > newNode.getFunc()) {
+
+                                S.remove(openList.remove(newNode.getPos()));
+                            }
+
+                            else {
+                                continue;
+                            }
+                        }
+
+                        if (map.isGoal(newNode)) {
+
+                            goalNode = newNode;
+                            return path(newNode);
+                        }
+
+                        S.add(newNode);
+                        openList.put(newNode.getPos(), newNode);
+                    }
+                }
+            }
+            threshold = minF;
+        }
+        return "no path";
+    }
+
+    class AStarComparator implements Comparator<Node> {
+
+        @Override
+        public int compare(Node n1, Node n2) {
+
+            return Integer.compare(n1.getFunc(),  n2.getFunc());
+        }
+    };
+
 
 
 
@@ -203,16 +341,20 @@ public class Algo {
 
         Hashtable<Position, Node> openList = new Hashtable<>();
 
-        Node n1 = new Node(1,1,"X", null, null);
-        Node n2 = new Node(1,1,"Y", null, null);
+        Node n1 = new Node(1,1,"S", null, null, 0);
+        Node n2 = new Node(2,2,"S", null, null, 0);
         System.out.println(openList);
         openList.put(n1.getPos(), n1);
+        openList.put(n2.getPos(), n2);
         System.out.println(openList);
         System.out.println(openList.containsKey(n1.getPos()));
         boolean a = openList.containsKey(n2.getPos());
-        System.out.println(openList.containsKey(n2.getPos()));
-        openList.remove(n1.getPos());
+        Node n3 = new Node(1,1,"R", n2, Direction.UP, 0);
+        System.out.println("aa: " + openList.put(n3.getPos(), n3));
         System.out.println(openList);
+//        System.out.println(openList.containsKey(n2.getPos()));
+//        openList.remove(n1.getPos());
+//        System.out.println(openList);
 
 
 
