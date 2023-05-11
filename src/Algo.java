@@ -223,7 +223,7 @@ public class Algo {
                     openList.put(newNode.getPos(), newNode);
                 }
 
-                else if (openList.contains(newNode.getPos())) {
+                else if (openList.containsKey(newNode.getPos())) {
 
                     if (openList.get(newNode.getPos()).getFunc() > newNode.getFunc()) {
 
@@ -241,8 +241,13 @@ public class Algo {
         Stack<Node> S = new Stack<>();
         Hashtable<Position, Node> openList = new Hashtable<>();
         int threshold = startNode.getWeight();
+        int counter = 0;
 
         while (threshold != Integer.MAX_VALUE) {
+
+             counter = 0;
+
+            System.out.println("kkkk");
 
             // Minimum f(x) value we have seen through an iteration
             int minF = Integer.MAX_VALUE;
@@ -252,6 +257,12 @@ public class Algo {
             openList.put(startNode.getPos(), startNode);
 
             while ( !S.isEmpty() ) {
+
+                System.out.println(counter++);
+
+                System.out.println(threshold);
+
+                System.out.println(Arrays.toString(S.toArray()));
 
                 Node currNode = S.pop();
 
@@ -284,16 +295,19 @@ public class Algo {
                             continue;
                         }
 
-                        if (openList.contains(newNode.getPos()) && openList.get(newNode.getPos()).isOut()) {
-
+                        if (openList.containsKey(newNode.getPos()) && openList.get(newNode.getPos()).isOut()) {
+//                            System.out.println("llllllll");
+//                            return "llll";
                             continue;
                         }
 
-                        if (openList.contains(newNode.getPos()) && !openList.get(newNode.getPos()).isOut()) {
+                        if (openList.containsKey(newNode.getPos()) && !openList.get(newNode.getPos()).isOut()) {
 
                             if (openList.get(newNode.getPos()).getFunc() > newNode.getFunc()) {
 
-                                S.remove(openList.remove(newNode.getPos()));
+
+                                S.remove(openList.get(newNode.getPos()));
+                                openList.remove(newNode.getPos());
                             }
 
                             else {
@@ -347,7 +361,7 @@ public class Algo {
         openList.put(n1.getPos(), n1);
         openList.put(n2.getPos(), n2);
         System.out.println(openList);
-        System.out.println(openList.containsKey(n1.getPos()));
+        System.out.println(openList.contains(n1));
         boolean a = openList.containsKey(n2.getPos());
         Node n3 = new Node(1,1,"R", n2, Direction.UP, 0);
         System.out.println("aa: " + openList.put(n3.getPos(), n3));

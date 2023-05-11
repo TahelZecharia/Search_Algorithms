@@ -18,7 +18,7 @@ public class Ex1 {
             try{
 
                 // Open input file:
-                File inputFile = new File("input.txt");
+                File inputFile = new File("input2.txt");
                 Scanner scanner = new Scanner(inputFile);
 
                 // 1) Reads the name of the desired algorithm:
@@ -72,11 +72,11 @@ public class Ex1 {
                 Algo algo = new Algo(map, algoName, oldFirst, withOpenList, startX, startY);
 
                 long startTime = System.currentTimeMillis();
-                System.out.println(algo.DFID());
+                System.out.println(algo.IDAStar());
                 System.out.println(Node.getNodeCounter());
                 System.out.println(algo.getCost());
 //                String result = String.format("%.2f", System.currentTimeMillis() - startTime);
-                System.out.println(((System.currentTimeMillis() - startTime) / 1000) + " seconds");
+                System.out.println(((System.currentTimeMillis() - startTime) / 1000.0) + " seconds");
 //                System.out.println(result + " seconds");
 
 

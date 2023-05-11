@@ -39,6 +39,7 @@ public class Map {
 
         // Calculates the Manhattan distance between the goal point and the current point:
         int ManhattanDistance = Math.abs(goalPos.getX() - x) + Math.abs(goalPos.getY() - y);
+//        int ManhattanDistance = Math.max(Math.abs(goalPos.getX() - x), Math.abs(goalPos.getY() - y));
 
         int weight = 5; // The cost to move to the goal node is 5.
         int amountD = (int) (size * size / 10); // It is known that the entire map has at most 10% of "D" squares.
