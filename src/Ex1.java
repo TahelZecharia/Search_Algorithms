@@ -49,13 +49,6 @@ public class Ex1 {
                 int startY = Integer.parseInt(line.substring(line.indexOf(",")+1, line.indexOf(")")));
                 int goalX = Integer.parseInt(line.substring(line.lastIndexOf("(")+1, line.lastIndexOf(",")));
                 int goalY = Integer.parseInt(line.substring(line.lastIndexOf(",")+1, line.lastIndexOf(")")));
-//                Pattern pattern = Pattern.compile("\\((-?\\d+),(-?\\d+)\\),\\((-?\\d+),(-?\\d+)\\)");
-//                Matcher matcher = pattern.matcher(line);
-//                System.out.println(line);
-//                int startX = Integer.parseInt(matcher.group(1));
-//                int startY = Integer.parseInt(matcher.group(2));
-//                int goalX = Integer.parseInt(matcher.group(3));
-//                int goalY = Integer.parseInt(matcher.group(4));
 
                 // 7) Reads the board:
                 String[][] board = new String[size][size];
@@ -72,12 +65,11 @@ public class Ex1 {
                 Algo algo = new Algo(map, algoName, oldFirst, withOpenList, startX, startY);
 
                 long startTime = System.currentTimeMillis();
-                System.out.println(algo.IDAStar());
-                System.out.println(Node.getNodeCounter());
+                System.out.println(algo.DFBnB());
+                System.out.println("Num: " + Node.getNodeCounter());
                 System.out.println(algo.getCost());
-//                String result = String.format("%.2f", System.currentTimeMillis() - startTime);
                 System.out.println(((System.currentTimeMillis() - startTime) / 1000.0) + " seconds");
-//                System.out.println(result + " seconds");
+
 
 
 

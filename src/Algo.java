@@ -37,9 +37,11 @@ public class Algo {
                 break;
 
             case "IDA*":
+                IDAStar();
                 break;
 
             case "DFBnB":
+                DFBnB();
                 break;
 
             default:
@@ -258,11 +260,11 @@ public class Algo {
 
             while ( !S.isEmpty() ) {
 
-                System.out.println(counter++);
-
-                System.out.println(threshold);
-
-                System.out.println(Arrays.toString(S.toArray()));
+//                System.out.println(counter++);
+//
+//                System.out.println(threshold);
+//
+//                System.out.println(Arrays.toString(S.toArray()));
 
                 Node currNode = S.pop();
 
@@ -331,6 +333,99 @@ public class Algo {
         return "no path";
     }
 
+    public String DFBnB() {
+
+        Stack<Node> S = new Stack<>();
+        Hashtable<Position, Node> openList = new Hashtable<>();
+        List<Node> N = new ArrayList<>();
+
+        S.add(startNode);
+        openList.put(startNode.getPos(), startNode);
+
+        String result = "no path";
+        int threshold = Integer.MAX_VALUE;
+
+        while (!S.isEmpty()) {
+
+            Node currNode = S.pop();
+//            print(currNode);
+
+            if (currNode.isOut()) {
+
+                openList.remove(currNode.getPos());
+            }
+
+            else {
+
+                currNode.setOut(true);
+                S.add(currNode);
+
+                for (Direction direction : map.allowedOperators(currNode)) {
+
+                    Node newNode = map.operator(currNode, direction);
+                    N.add(newNode);
+                }
+
+                // Sort the nodes in N according to their `f` heuristic values.
+                N.sort(new AStarComparator());
+
+                List<Node> tempN = new ArrayList<>(N);
+
+                for (Node childNode : tempN) {
+
+                    if (N.contains(childNode)) {
+
+                        if (childNode.getFunc() >= threshold) {
+                            // Remove all nodes after `child` (including)
+                            int index = N.indexOf(childNode);
+
+                            N.subList(index, N.size()).clear();
+                        }
+                        else if (openList.containsKey(childNode.getPos()) && openList.get(childNode.getPos()).isOut()) {
+
+                            N.remove(childNode);
+                        }
+                        else if (openList.containsKey(childNode.getPos()) && (!openList.get(childNode.getPos()).isOut())) {
+
+                            if (openList.get(childNode.getPos()).getFunc() <= childNode.getFunc()) {
+
+                                N.remove(childNode);
+                            }
+
+                            else {
+
+                                S.remove(openList.get(childNode.getPos()));
+                                openList.remove(childNode.getPos());
+                            }
+                        }
+
+                        else if (map.isGoal(childNode)) {
+                            // If we've reached here -
+                            // then f(child) < t
+                            threshold = childNode.getFunc();
+                            goalNode = childNode;
+                            result = path(childNode);
+                            int index = N.indexOf(childNode);
+                            N.subList(index, N.size()).clear();
+                        }
+                    }
+                }
+
+                Collections.reverse(N);
+                S.addAll(N);
+
+                for (Node node : N) {
+
+                    openList.put(node.getPos(), node);
+                }
+
+                N.clear();
+            }
+        }
+
+        return result;
+    }
+
     class AStarComparator implements Comparator<Node> {
 
         @Override
@@ -357,18 +452,31 @@ public class Algo {
 
         Node n1 = new Node(1,1,"S", null, null, 0);
         Node n2 = new Node(2,2,"S", null, null, 0);
+        Node n3 = new Node(3,3,"R", n2, Direction.UP, 0);
+        Node n4 = new Node(4,4,"R", n2, Direction.UP, 0);
+        Node n5 = new Node(5,5,"R", n2, Direction.UP, 0);
+        Node n6 = new Node(6,6,"R", n2, Direction.UP, 0);
+        Node n7 = new Node(7,7,"R", n2, Direction.UP, 0);
+        Node n8 = new Node(8,8,"R", n2, Direction.UP, 0);
         System.out.println(openList);
         openList.put(n1.getPos(), n1);
         openList.put(n2.getPos(), n2);
+        openList.put(n3.getPos(), n3);
+        openList.put(n4.getPos(), n4);
+        openList.put(n5.getPos(), n5);
+        openList.put(n6.getPos(), n6);
+
         System.out.println(openList);
-        System.out.println(openList.contains(n1));
-        boolean a = openList.containsKey(n2.getPos());
-        Node n3 = new Node(1,1,"R", n2, Direction.UP, 0);
-        System.out.println("aa: " + openList.put(n3.getPos(), n3));
-        System.out.println(openList);
-//        System.out.println(openList.containsKey(n2.getPos()));
-//        openList.remove(n1.getPos());
-//        System.out.println(openList);
+
+        ArrayList<Integer> N = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8));
+        System.out.println(N);
+        N.subList(1, N.size()).clear();
+        System.out.println(N);
+
+
+
+
+
 
 
 

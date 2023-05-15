@@ -7,7 +7,6 @@ public class Map {
     private boolean clockwise;
     private Position goalPos;
     private Direction[] operators;
-    //= {Direction.RIGHT, Direction.RIGHT_DOWN, Direction.DOWN, Direction.LEFT_DOWN, Direction.LEFT, Direction.LEFT_UP, Direction.UP, Direction.RIGHT_UP};
 
     public Map(String[][] board, int size, boolean clockwise, int goalX, int goalY) {
 
@@ -35,6 +34,11 @@ public class Map {
      * The function receives a location of a node and calculates its weight
      * according to the heuristic function.
      */
+
+//    public int HeuristicFunction(int x, int y) {
+//
+//        return Math.max(Math.abs(goalPos.getX() - x), Math.abs(goalPos.getY() - y));
+//    }
     public int HeuristicFunction(int x, int y) {
 
         // Calculates the Manhattan distance between the goal point and the current point:
