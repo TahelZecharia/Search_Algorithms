@@ -4,7 +4,6 @@ public class Map {
 
     private String[][] board;
     private int size;
-    private boolean clockwise;
     private Position goalPos;
     private Direction[] operators;
 
@@ -12,7 +11,6 @@ public class Map {
 
         this.board = board;
         this.size = size;
-        this.clockwise = clockwise;
         this.goalPos = new Position(goalX, goalY);
 
         if (clockwise) {
@@ -24,10 +22,11 @@ public class Map {
 
             operators = new Direction[]{Direction.RIGHT, Direction.RIGHT_UP, Direction.UP, Direction.LEFT_UP, Direction.LEFT, Direction.LEFT_DOWN, Direction.DOWN, Direction.RIGHT_DOWN};
         }
-        for (String[] strings : board) {
 
-            System.out.println(Arrays.toString(strings));
-        }
+//        for (String[] strings : board) {
+//
+//            System.out.println(Arrays.toString(strings));
+//        }
     }
 
     /**
@@ -95,16 +94,6 @@ public class Map {
         }
 
         return board[pos.getX() - 1][pos.getY() - 1];
-    }
-
-    public String getTerrain(int x, int y) {
-
-        if (x > size || y > size || x < 1 || y < 1) {
-
-            return null;
-        }
-
-        return board[x - 1][y - 1];
     }
 
     public boolean allowedOperator(Node node, Position newPos) {

@@ -76,6 +76,10 @@ public class Node {
         return weight;
     }
 
+    public int getKey() {
+        return key;
+    }
+
     public static int getNodeCounter() {
         return nodeCounter;
     }
@@ -117,6 +121,7 @@ public class Node {
                 ", key: '" + key + '\'' +
                 ", prevPos: '" + parentPos + '\'' +
                 ", prevOperator: '" + parentOperator + '\'' +
+                ", func: '" + getFunc() + '\'' +
                 "}";
     }
 

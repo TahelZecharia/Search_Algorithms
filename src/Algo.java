@@ -20,64 +20,44 @@ public class Algo {
 
     public String FindPath() {
 
-        long startTime = System.currentTimeMillis();
+        String path;
 
         switch (algoName) {
 
             case "BFS":
-                BFS();
+                path = BFS();
                 break;
 
             case "DFID":
-                DFID();
+                path = DFID();
                 break;
 
             case "A*":
-                AStar();
+                path = AStar();
                 break;
 
             case "IDA*":
-                IDAStar();
+                path = IDAStar();
                 break;
 
             case "DFBnB":
-                DFBnB();
+                path = DFBnB();
                 break;
 
             default:
                 throw new IllegalStateException("Unexpected value: " + algoName);
         }
 
-        if (goalNode == null) {
+        if (path.equals("no path")) {
 
-            return "no path" +
+            return path +
                     "\nNum: " + Node.getNodeCounter() +
-                    "\nCost: inf" +
-                    "\ntime: " + (System.currentTimeMillis() - startTime) / 1000.0;
+                    "\nCost: inf";
         }
 
-//        if (withOpen) {
-//            System.out.println("Goal State found:\n" + goal);
-//        }
-        return path(goalNode) +
+        return path +
                 "\nNum: " + Node.getNodeCounter() +
-                "\nCost: " + goalNode.getCost() +
-                "\ntime: " + (System.currentTimeMillis() - startTime) / 1000.0;
-    }
-
-    public String path(Node node) {
-
-        if (node == null) return "";
-        if (node.getParent() == null) return "";
-        if (node.getParent().getParentOperator() == null) return "" + node.getParentOperator();
-        return "" + path(node.getParent()) + "-" + node.getParentOperator();
-    }
-
-    public String getCost(){
-
-        if (goalNode == null) return "Cost: inf";
-
-        return "Cost: " + goalNode.getCost() + "";
+                "\nCost: " + goalNode.getCost();
     }
 
     public String BFS() {
@@ -91,15 +71,12 @@ public class Algo {
 
         while (!Q.isEmpty()) {
 
-            Node currNode = Q.poll();
+            print(openList);
 
-//            print(currNode);
+            Node currNode = Q.poll();
 
             openList.remove(currNode.getPos());
             closedList.put(currNode.getPos(), currNode);
-
-            System.out.println("open list: " + openList);
-            System.out.println("closed list: " + closedList);
 
             for (Direction direction : map.allowedOperators(currNode)) {
 
@@ -113,7 +90,6 @@ public class Algo {
                         return path(newNode);
                     }
 
-                    System.out.println("newNode: " + newNode);
                     openList.put(newNode.getPos(), newNode);
                     Q.add(newNode);
                 }
@@ -124,7 +100,7 @@ public class Algo {
 
     public String DFID() {
 
-        Hashtable<Position, Node> H = new Hashtable<>(); // Saving the current route we are on. Used to loop avoidance.
+        Hashtable<Position, Node> H = new Hashtable<>();
         int limit = Integer.MAX_VALUE;
         String result;
 
@@ -143,8 +119,6 @@ public class Algo {
 
     private String LimitedDFS(Node currNode, int limit, Hashtable<Position, Node> H) {
 
-        //        print(curr);
-
         if (map.isGoal(currNode)) {
 
             goalNode = currNode;
@@ -157,9 +131,11 @@ public class Algo {
         }
 
         H.put(currNode.getPos(), currNode);
+        print(H);
         boolean isCutoff = false;
         String result;
 
+        // Expanding currNode:
         for (Direction direction : map.allowedOperators(currNode)) {
 
             Node newNode = map.operator(currNode, direction);
@@ -193,24 +169,23 @@ public class Algo {
 
         Hashtable<Position, Node> openList = new Hashtable<>();
         Hashtable<Position, Node> closedList = new Hashtable<>();
-        PriorityQueue<Node> PQ = new PriorityQueue<>(new AStarComparator());
+        PriorityQueue<Node> PQ = new PriorityQueue<>(new NodeComparator());
 
         PQ.add(startNode);
         openList.put(startNode.getPos(), startNode);
 
         while (!PQ.isEmpty()) {
 
+            print(openList);
+
             Node currNode = PQ.poll();
             openList.remove(currNode.getPos());
-
-//            print(currNode);
 
             if (map.isGoal(currNode)) {
 
                 goalNode = currNode;
                 return path(currNode);
             }
-
 
             closedList.put(currNode.getPos(), currNode);
 
@@ -243,15 +218,9 @@ public class Algo {
         Stack<Node> S = new Stack<>();
         Hashtable<Position, Node> openList = new Hashtable<>();
         int threshold = startNode.getWeight();
-        int counter = 0;
 
         while (threshold != Integer.MAX_VALUE) {
 
-             counter = 0;
-
-            System.out.println("kkkk");
-
-            // Minimum f(x) value we have seen through an iteration
             int minF = Integer.MAX_VALUE;
 
             startNode.setOut(false);
@@ -260,17 +229,9 @@ public class Algo {
 
             while ( !S.isEmpty() ) {
 
-//                System.out.println(counter++);
-//
-//                System.out.println(threshold);
-//
-//                System.out.println(Arrays.toString(S.toArray()));
+                print(openList);
 
                 Node currNode = S.pop();
-
-//                if (withOpen()) {
-//                    System.out.println(currNode);
-//                }
 
                 if (currNode.isOut()) {
 
@@ -279,12 +240,8 @@ public class Algo {
 
                 else {
 
-                    // Mark the node to be removed next time it's added to the stack
                     currNode.setOut(true);
-                    // Push back to the stack
                     S.add(currNode);
-
-
 
                     // Expanding currNode:
                     for (Direction direction : map.allowedOperators(currNode)) {
@@ -298,8 +255,7 @@ public class Algo {
                         }
 
                         if (openList.containsKey(newNode.getPos()) && openList.get(newNode.getPos()).isOut()) {
-//                            System.out.println("llllllll");
-//                            return "llll";
+
                             continue;
                         }
 
@@ -347,8 +303,9 @@ public class Algo {
 
         while (!S.isEmpty()) {
 
+            print(openList);
+
             Node currNode = S.pop();
-//            print(currNode);
 
             if (currNode.isOut()) {
 
@@ -360,14 +317,14 @@ public class Algo {
                 currNode.setOut(true);
                 S.add(currNode);
 
+                // Expanding currNode:
                 for (Direction direction : map.allowedOperators(currNode)) {
 
                     Node newNode = map.operator(currNode, direction);
                     N.add(newNode);
                 }
 
-                // Sort the nodes in N according to their `f` heuristic values.
-                N.sort(new AStarComparator());
+                N.sort(new NodeComparator());
 
                 List<Node> tempN = new ArrayList<>(N);
 
@@ -376,15 +333,16 @@ public class Algo {
                     if (N.contains(childNode)) {
 
                         if (childNode.getFunc() >= threshold) {
-                            // Remove all nodes after `child` (including)
-                            int index = N.indexOf(childNode);
 
+                            int index = N.indexOf(childNode);
                             N.subList(index, N.size()).clear();
                         }
+
                         else if (openList.containsKey(childNode.getPos()) && openList.get(childNode.getPos()).isOut()) {
 
                             N.remove(childNode);
                         }
+
                         else if (openList.containsKey(childNode.getPos()) && (!openList.get(childNode.getPos()).isOut())) {
 
                             if (openList.get(childNode.getPos()).getFunc() <= childNode.getFunc()) {
@@ -400,8 +358,7 @@ public class Algo {
                         }
 
                         else if (map.isGoal(childNode)) {
-                            // If we've reached here -
-                            // then f(child) < t
+
                             threshold = childNode.getFunc();
                             goalNode = childNode;
                             result = path(childNode);
@@ -426,25 +383,50 @@ public class Algo {
         return result;
     }
 
-    class AStarComparator implements Comparator<Node> {
+    public String path(Node node) {
+
+        if (node == null) return "";
+        if (node.getParent() == null) return "";
+        if (node.getParent().getParentOperator() == null) return "" + node.getParentOperator();
+        return "" + path(node.getParent()) + "-" + node.getParentOperator();
+    }
+
+    public void print(Hashtable<Position, Node> openList) {
+
+        if (withOpenList) {
+
+            System.out.println("\nOpen List: ");
+            for (Node node : openList.values()) {
+
+                System.out.println(node);
+            }
+        }
+    }
+
+    class NodeComparator implements Comparator<Node> {
 
         @Override
         public int compare(Node n1, Node n2) {
 
-            return Integer.compare(n1.getFunc(),  n2.getFunc());
+            int f1 = n1.getFunc();
+            int f2 = n2.getFunc();
+
+            if (f1 == f2) {
+
+                if (oldFirst) {
+
+                    return Integer.compare(n1.getKey(), n2.getKey());
+                }
+
+                else {
+
+                    return Integer.compare(n2.getKey(), n1.getKey());
+                }
+            }
+            return Integer.compare(f1,  f2);
         }
     };
 
-
-
-
-    public void print(Node n) {
-
-        if (withOpenList) {
-
-            System.out.println(n);
-        }
-    }
 
     public static void main(String[] args) {
 
@@ -465,6 +447,8 @@ public class Algo {
         openList.put(n4.getPos(), n4);
         openList.put(n5.getPos(), n5);
         openList.put(n6.getPos(), n6);
+        openList.put(n5.getPos(), n5);
+        openList.put(n6.getPos(), n6);
 
         System.out.println(openList);
 
@@ -473,17 +457,7 @@ public class Algo {
         N.subList(1, N.size()).clear();
         System.out.println(N);
 
-
-
-
-
-
-
-
-
     }
-
-
 }
 
 

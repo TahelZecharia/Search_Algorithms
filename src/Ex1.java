@@ -18,7 +18,7 @@ public class Ex1 {
             try{
 
                 // Open input file:
-                File inputFile = new File("input2.txt");
+                File inputFile = new File("input.txt");
                 Scanner scanner = new Scanner(inputFile);
 
                 // 1) Reads the name of the desired algorithm:
@@ -35,7 +35,7 @@ public class Ex1 {
                 }
 
                 // 3) Reads whether to print the running time:
-                Boolean withTime = scanner.nextLine().equalsIgnoreCase("with time");
+                boolean withTime = scanner.nextLine().equalsIgnoreCase("with time");
 
                 // 4) Reads whether to print the open list:
                 Boolean withOpenList = scanner.nextLine().equalsIgnoreCase("with open");
@@ -65,35 +65,16 @@ public class Ex1 {
                 Algo algo = new Algo(map, algoName, oldFirst, withOpenList, startX, startY);
 
                 long startTime = System.currentTimeMillis();
-                System.out.println(algo.DFBnB());
-                System.out.println("Num: " + Node.getNodeCounter());
-                System.out.println(algo.getCost());
-                System.out.println(((System.currentTimeMillis() - startTime) / 1000.0) + " seconds");
 
+                String path = algo.FindPath();
+                String time = "\n" + ((System.currentTimeMillis() - startTime) / 1000.0) + " seconds";
 
+                outputFile.write(path);
+                if (withTime) outputFile.write(time);
 
-
-
-
-//                while (scanner.hasNextLine()) {
-//
-//                    String data = scanner.nextLine();
-//                    int algo = Integer.parseInt(data.substring(data.length()-1));
-//                    String query = data.substring(0, data.length()-2);
-
-//                    Algo myAlgo = new Algo(myNet, query);
-//                    double ans = myAlgo.CalculateQuery(algo);
-//                    int add = myAlgo.getAddCounter();
-//                    int mul = myAlgo.getMulCounter();
-
-//                    outputFile.write(String.format("%.5f", ans) + "," + add + "," + mul);
-
-//                    if (scanner.hasNextLine()) {
-//                        outputFile.write("\n");
-//                    }
-//                }
                 scanner.close();
             }
+
             catch (Exception e){
 
                 e.printStackTrace();
