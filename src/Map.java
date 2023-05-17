@@ -34,42 +34,47 @@ public class Map {
      * according to the heuristic function.
      */
 
+    public int HeuristicFunction2(int x, int y) {
+
+        int ManhattanDistance = Math.abs(goalPos.getX() - x) + Math.abs(goalPos.getY() - y);
+
+        if (ManhattanDistance == 0) return 0;
+
+        return ManhattanDistance + 3; // 4 was better..
+    }
+
 //    public int HeuristicFunction(int x, int y) {
 //
-//        return Math.max(Math.abs(goalPos.getX() - x), Math.abs(goalPos.getY() - y));
-//    }
-    public int HeuristicFunction(int x, int y) {
-
-        // Calculates the Manhattan distance between the goal point and the current point:
-        int ManhattanDistance = Math.abs(goalPos.getX() - x) + Math.abs(goalPos.getY() - y);
+//        // Calculates the Manhattan distance between the goal point and the current point:
+////        int ManhattanDistance = Math.abs(goalPos.getX() - x) + Math.abs(goalPos.getY() - y);
 //        int ManhattanDistance = Math.max(Math.abs(goalPos.getX() - x), Math.abs(goalPos.getY() - y));
-
-        int weight = 5; // The cost to move to the goal node is 5.
-        int amountD = (int) (size * size / 10); // It is known that the entire map has at most 10% of "D" squares.
-
-        // It is known that the entire map has at most 10% of "D" squares (whose cost is 1).
-        if (ManhattanDistance <= amountD + 1) {
-
-            weight += ManhattanDistance - 1;
-        }
-
-        // It is known that the entire map has at most 10% of "R" squares (whose cost is 3).
-        else if (ManhattanDistance <= amountD * 2 + 1) {
-
-            weight += amountD;
-            weight += (ManhattanDistance - amountD - 1) * 3;
-        }
-
-        // The other squares on the board are "H" (whose cost is 5).
-        else {
-
-            weight += amountD;
-            weight += amountD * 3;
-            weight += (ManhattanDistance - amountD * 2 - 1) * 5;
-        }
-
-        return weight;
-    }
+//
+//        int weight = 5; // The cost to move to the goal node is 5.
+//        int amountD = (int) (size * size / 10); // It is known that the entire map has at most 10% of "D" squares.
+//
+//        // It is known that the entire map has at most 10% of "D" squares (whose cost is 1).
+//        if (ManhattanDistance <= amountD + 1) {
+//
+//            weight += ManhattanDistance - 1;
+//        }
+//
+//        // It is known that the entire map has at most 10% of "R" squares (whose cost is 3).
+//        else if (ManhattanDistance <= amountD * 2 + 1) {
+//
+//            weight += amountD;
+//            weight += (ManhattanDistance - amountD - 1) * 3;
+//        }
+//
+//        // The other squares on the board are "H" (whose cost is 5).
+//        else {
+//
+//            weight += amountD;
+//            weight += amountD * 3;
+//            weight += (ManhattanDistance - amountD * 2 - 1) * 5;
+//        }
+//
+//        return weight;
+//    }
 
     public Node createNode(int x, int y, Node parent, Direction parentOperator) {
 
@@ -78,7 +83,7 @@ public class Map {
             return null;
         }
 
-        return new Node(x, y, board[x-1][y-1], parent, parentOperator, HeuristicFunction(x, y));
+        return new Node(x, y, board[x-1][y-1], parent, parentOperator, HeuristicFunction2(x, y));
     }
 
     public boolean isGoal(Node node) {
@@ -94,6 +99,16 @@ public class Map {
         }
 
         return board[pos.getX() - 1][pos.getY() - 1];
+    }
+
+    public String getTerrain(int x, int y) {
+
+        if (x > size || y > size || x < 1 || y < 1) {
+
+            return null;
+        }
+
+        return board[x - 1][y - 1];
     }
 
     public boolean allowedOperator(Node node, Position newPos) {
