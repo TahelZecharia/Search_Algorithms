@@ -38,6 +38,74 @@ public class Map {
 
         int ManhattanDistance = Math.max(Math.abs(goalPos.getX() - x), Math.abs(goalPos.getY() - y));
 
+        // If this is the goal node:
+        if (ManhattanDistance == 0) return 0;
+        // If this is the father of the goal node:
+        if (ManhattanDistance == 1) return 5;
+
+        // Subtracting the cost to the goal node and the minimum cost
+        // to the child of the current vertex (we will add them later).
+        ManhattanDistance -= 2;
+
+        int min = Integer.MAX_VALUE;
+
+        // An array containing all possible moves for the current node:
+        String[] array = new String[] {getTerrain(x+1, y), getTerrain(x+1, y+1), getTerrain(x+1, y-1), getTerrain(x, y+1), getTerrain(x, y-1), getTerrain(x-1, y), getTerrain(x-1, y+1), getTerrain(x-1, y-1)};
+        String[] diagonalMovement = new String[] {getTerrain(x+1, y+1), getTerrain(x+1, y-1), getTerrain(x-1, y+1), getTerrain(x-1, y-1)};
+        String[] straightMovement = new String[] {getTerrain(x+1, y), getTerrain(x, y+1), getTerrain(x, y-1), getTerrain(x-1, y)};
+
+        for (String s : diagonalMovement) {
+
+            if (s != null) {
+
+                switch (s) {
+
+                    case "D":
+                        min = 1;
+                        return ManhattanDistance + min + 5;
+
+                    case "R":
+                        if (min > 3) min = 3;
+                        break;
+
+                    case "H":
+                        if (min > 10) min = 10;
+                        break;
+                }
+            }
+        }
+
+        for (String s : straightMovement) {
+
+            if (s != null) {
+
+                switch (s) {
+
+                    case "D":
+                        min = 1;
+                        return ManhattanDistance + min + 5;
+
+                    case "R":
+                        if (min > 3) min = 3;
+                        break;
+
+                    case "H":
+                        if (min > 5) min = 5;
+                        break;
+                }
+            }
+        }
+
+        // Returns the minimum distance
+        // + the movement with the lowest cost
+        // + the cost of the last step to the vertex of the goal.
+        return ManhattanDistance + min + 5;
+    }
+
+    public int finalH(int x, int y) {
+
+        int ManhattanDistance = Math.max(Math.abs(goalPos.getX() - x), Math.abs(goalPos.getY() - y));
+
         if (ManhattanDistance == 0) return 0;
         if (ManhattanDistance == 1) return 5;
 
@@ -76,6 +144,7 @@ public class Map {
         if (min == 10) return ManhattanDistance + 5;
         return ManhattanDistance + min + 5;
     }
+
     public int HeuristicFunction2(int x, int y) {
 
         int d = (int) Math.sqrt(Math.pow(goalPos.getX() - x, 2) + Math.pow(goalPos.getY() - y, 2));
