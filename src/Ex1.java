@@ -18,7 +18,7 @@ public class Ex1 {
             try{
 
                 // Open input file:
-                File inputFile = new File("input2.txt");
+                File inputFile = new File("input3.txt");
                 Scanner scanner = new Scanner(inputFile);
 
                 // 1) Reads the name of the desired algorithm:

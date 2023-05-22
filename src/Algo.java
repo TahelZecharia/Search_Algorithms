@@ -362,6 +362,7 @@ public class Algo {
                             threshold = childNode.getFunc();
                             goalNode = childNode;
                             result = path(childNode);
+                            System.out.println(result);
                             int index = N.indexOf(childNode);
                             N.subList(index, N.size()).clear();
                         }
