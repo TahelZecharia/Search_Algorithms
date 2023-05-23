@@ -34,7 +34,7 @@ public class Map {
      * according to the heuristic function.
      */
 
-    public int h(int x, int y) {
+    public int HeuristicFunc(int x, int y) {
 
         int ManhattanDistance = Math.max(Math.abs(goalPos.getX() - x), Math.abs(goalPos.getY() - y));
 
@@ -47,10 +47,9 @@ public class Map {
         // to the child of the current vertex (we will add them later).
         ManhattanDistance -= 2;
 
-        int min = Integer.MAX_VALUE;
+        int min = 11;
 
-        // An array containing all possible moves for the current node:
-        String[] array = new String[] {getTerrain(x+1, y), getTerrain(x+1, y+1), getTerrain(x+1, y-1), getTerrain(x, y+1), getTerrain(x, y-1), getTerrain(x-1, y), getTerrain(x-1, y+1), getTerrain(x-1, y-1)};
+        // An arrays containing all possible moves for the current node:
         String[] diagonalMovement = new String[] {getTerrain(x+1, y+1), getTerrain(x+1, y-1), getTerrain(x-1, y+1), getTerrain(x-1, y-1)};
         String[] straightMovement = new String[] {getTerrain(x+1, y), getTerrain(x, y+1), getTerrain(x, y-1), getTerrain(x-1, y)};
 
@@ -102,100 +101,6 @@ public class Map {
         return ManhattanDistance + min + 5;
     }
 
-    public int finalH(int x, int y) {
-
-        int ManhattanDistance = Math.max(Math.abs(goalPos.getX() - x), Math.abs(goalPos.getY() - y));
-
-        if (ManhattanDistance == 0) return 0;
-        if (ManhattanDistance == 1) return 5;
-
-        // Subtracting the cost to the goal node and the minimum cost
-        // to the child of the current vertex (we will add them later).
-        ManhattanDistance -= 2;
-
-        int min = 10;
-
-        // An array containing all possible moves for the current node:
-        String[] array = new String[] {getTerrain(x+1, y), getTerrain(x+1, y+1), getTerrain(x+1, y-1), getTerrain(x, y+1), getTerrain(x, y-1), getTerrain(x-1, y), getTerrain(x-1, y+1), getTerrain(x-1, y-1)};
-        String[] diagonalMovement = new String[] {getTerrain(x+1, y+1), getTerrain(x+1, y-1), getTerrain(x-1, y+1), getTerrain(x-1, y-1)};
-        String[] straightMovement = new String[] {getTerrain(x+1, y), getTerrain(x, y+1), getTerrain(x, y-1), getTerrain(x-1, y)};
-
-        for (String s : array) {
-
-            if (s != null) {
-
-                switch (s) {
-
-                    case "D":
-                        min = 1;
-                        break;
-
-                    case "R":
-                        if (min > 3) min = 3;
-                        break;
-
-                    case "H":
-                        if (min > 5) min = 5;
-                        break;
-                }
-            }
-        }
-
-        if (min == 10) return ManhattanDistance + 5;
-        return ManhattanDistance + min + 5;
-    }
-
-    public int HeuristicFunction2(int x, int y) {
-
-        int d = (int) Math.sqrt(Math.pow(goalPos.getX() - x, 2) + Math.pow(goalPos.getY() - y, 2));
-         int ManhattanDistance = Math.abs(goalPos.getX() - x) + Math.abs(goalPos.getY() - y);
-
-         ManhattanDistance /= 2;
-//        int ManhattanDistance = Math.max(Math.abs(goalPos.getX() - x), Math.abs(goalPos.getY() - y));
-
-        if (ManhattanDistance == 0) return 0;
-
-        return ManhattanDistance + 4; // 4 was better..
-    }
-
-    public int HeuristicFunction(int x, int y) {
-
-        // Calculates the Manhattan distance between the goal point and the current point:
-//        int ManhattanDistance = Math.abs(goalPos.getX() - x) + Math.abs(goalPos.getY() - y);
-        int ManhattanDistance = Math.max(Math.abs(goalPos.getX() - x), Math.abs(goalPos.getY() - y));
-
-        if (ManhattanDistance == 0) return 0;
-
-        int weight = 5; // The cost to move to the goal node is 5.
-        int amountD = (int) (size * size / 10); // It is known that the entire map has at most 10% of "D" squares.
-
-        // It is known that the entire map has at most 10% of "D" squares (whose cost is 1).
-        if (ManhattanDistance <= amountD + 1) {
-
-            weight += (ManhattanDistance - 1);
-        }
-
-        // It is known that the entire map has at most 10% of "R" squares (whose cost is 3).
-//        else if (ManhattanDistance <= amountD * 2 + 1) {
-        else {
-            weight += amountD;
-            weight += (ManhattanDistance - amountD - 1) * 2;
-            if (getTerrain(x, y).equals("D")) weight += 1;
-        }
-
-        // The other squares on the board are "H" (whose cost is 5).
-//        else {
-//
-//            weight += amountD;
-//            weight += amountD * 3;
-//            weight += (ManhattanDistance - amountD * 2 - 1) * 5;
-//            if (getTerrain(x, y).equals("D") || getTerrain(x, y).equals("R")) weight += 4;
-//        }
-
-//        return weight;
-        return 0;
-    }
-
     public Node createNode(int x, int y, Node parent, Direction parentOperator) {
 
         if (x > size || y > size || x < 1 || y < 1) {
@@ -203,7 +108,7 @@ public class Map {
             return null;
         }
 
-        return new Node(x, y, board[x-1][y-1], parent, parentOperator, h(x, y));
+        return new Node(x, y, board[x-1][y-1], parent, parentOperator, HeuristicFunc(x, y));
     }
 
     public boolean isGoal(Node node) {

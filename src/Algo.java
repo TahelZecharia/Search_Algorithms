@@ -362,7 +362,6 @@ public class Algo {
                             threshold = childNode.getFunc();
                             goalNode = childNode;
                             result = path(childNode);
-                            System.out.println(result);
                             int index = N.indexOf(childNode);
                             N.subList(index, N.size()).clear();
                         }
@@ -429,36 +428,36 @@ public class Algo {
     };
 
 
-    public static void main(String[] args) {
-
-        Hashtable<Position, Node> openList = new Hashtable<>();
-
-        Node n1 = new Node(1,1,"S", null, null, 0);
-        Node n2 = new Node(2,2,"S", null, null, 0);
-        Node n3 = new Node(3,3,"R", n2, Direction.UP, 0);
-        Node n4 = new Node(4,4,"R", n2, Direction.UP, 0);
-        Node n5 = new Node(5,5,"R", n2, Direction.UP, 0);
-        Node n6 = new Node(6,6,"R", n2, Direction.UP, 0);
-        Node n7 = new Node(7,7,"R", n2, Direction.UP, 0);
-        Node n8 = new Node(8,8,"R", n2, Direction.UP, 0);
-        System.out.println(openList);
-        openList.put(n1.getPos(), n1);
-        openList.put(n2.getPos(), n2);
-        openList.put(n3.getPos(), n3);
-        openList.put(n4.getPos(), n4);
-        openList.put(n5.getPos(), n5);
-        openList.put(n6.getPos(), n6);
-        openList.put(n5.getPos(), n5);
-        openList.put(n6.getPos(), n6);
-
-        System.out.println(openList);
-
-        ArrayList<Integer> N = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8));
-        System.out.println(N);
-        N.subList(1, N.size()).clear();
-        System.out.println(N);
-
-    }
+//    public static void main(String[] args) {
+//
+//        Hashtable<Position, Node> openList = new Hashtable<>();
+//
+//        Node n1 = new Node(1,1,"S", null, null, 0);
+//        Node n2 = new Node(2,2,"S", null, null, 0);
+//        Node n3 = new Node(3,3,"R", n2, Direction.UP, 0);
+//        Node n4 = new Node(4,4,"R", n2, Direction.UP, 0);
+//        Node n5 = new Node(5,5,"R", n2, Direction.UP, 0);
+//        Node n6 = new Node(6,6,"R", n2, Direction.UP, 0);
+//        Node n7 = new Node(7,7,"R", n2, Direction.UP, 0);
+//        Node n8 = new Node(8,8,"R", n2, Direction.UP, 0);
+//        System.out.println(openList);
+//        openList.put(n1.getPos(), n1);
+//        openList.put(n2.getPos(), n2);
+//        openList.put(n3.getPos(), n3);
+//        openList.put(n4.getPos(), n4);
+//        openList.put(n5.getPos(), n5);
+//        openList.put(n6.getPos(), n6);
+//        openList.put(n5.getPos(), n5);
+//        openList.put(n6.getPos(), n6);
+//
+//        System.out.println(openList);
+//
+//        ArrayList<Integer> N = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8));
+//        System.out.println(N);
+//        N.subList(1, N.size()).clear();
+//        System.out.println(N);
+//
+//    }
 }
 
 

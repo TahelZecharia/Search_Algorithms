@@ -89,8 +89,6 @@ public class Node {
     }
 
     public int getFunc() {
-
-//        return cost;
         return cost + weight;
     }
 
@@ -124,6 +122,4 @@ public class Node {
                 ", func: '" + getFunc() + '\'' +
                 "}";
     }
-
-
 }
