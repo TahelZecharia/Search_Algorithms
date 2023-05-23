@@ -149,7 +149,7 @@ public class Algo {
                 isCutoff = true;
             }
 
-            else if (!result.equals("fail")) {
+            else if (!result.equals("no path")) {
 
                 return result;
             }
@@ -162,7 +162,7 @@ public class Algo {
             return "cutoff";
         }
 
-        return "fail";
+        return "no path";
     }
 
     public String AStar() {
