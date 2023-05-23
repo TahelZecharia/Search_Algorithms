@@ -101,6 +101,20 @@ public class Map {
         return ManhattanDistance + min + 5;
     }
 
+    public int ManhattanHeuristic(int x, int y) {
+
+        int ManhattanDistance = Math.abs(goalPos.getX() - x) + Math.abs(goalPos.getY() - y);
+        int d = Math.max(Math.abs(goalPos.getX() - x), Math.abs(goalPos.getY() - y));
+
+        // If this is the goal node:
+        if (ManhattanDistance == 0) return 0;
+        // If this is the father of the goal node:
+        if (d == 1) return 5;
+
+        return ManhattanDistance + 4;
+
+    }
+
     public Node createNode(int x, int y, Node parent, Direction parentOperator) {
 
         if (x > size || y > size || x < 1 || y < 1) {
