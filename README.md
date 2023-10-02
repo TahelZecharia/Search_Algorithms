@@ -31,3 +31,12 @@ In this assignment, we were tasked with designing a heuristic function that is n
 For a detailed explanation and proof of the consistency and admissibility of the heuristic function, please refer to the document **"Heuristic Function.pdf"** in this repository.
 
 This document provides in-depth insights into how the heuristic function meets these critical properties, ensuring that the search algorithms operate effectively and reliably in finding the most cost-effective routes through the challenging topographic map.
+
+### Example Input and Output
+
+To help you get started, this repository contains example input and output files:
+
+- `input.txt`: Contains a sample topographic map and start/end point coordinates.
+- `output.txt`: Contains the expected output, including the path and cost for the provided input.
+
+You can use these example files as a reference for running the algorithms with your own input.
